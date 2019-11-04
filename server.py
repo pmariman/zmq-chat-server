@@ -201,9 +201,23 @@ class dummy_http:
 #######################################################################################################################
 
 
-def timer_callback(pub):
-    pub.send('foo', 'bar')
-    threading.Timer(2, timer_callback, args=(pub,)).start()
+class timed_job:
+    def __init__(self, timeout, pub):
+        self.timeout = timeout
+        self.pub = pub
+        self.start()
+
+    def timer_callback(self):
+        self.pub.send('foo', 'bar')
+
+    def thread_wait(self):
+        while not self.event.wait(self.timeout):
+            self.timer_callback()
+
+    def start(self):
+        self.event = threading.Event()
+        self.tid = threading.Thread(target=self.thread_wait, daemon=True)
+        self.tid.start()
 
 
 #######################################################################################################################
@@ -240,7 +254,7 @@ def main():
 
     if args.pub_port != None:
         pub = publisher(zctx, args.pub_port)
-        pub = timer_callback(pub)
+        test = timed_job(5, pub)
 
     if args.rep_port != None:
         rep = replier(zctx, args.rep_port)
