@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 
 	zsock = zmq_socket(zctx, ZMQ_SUB);
 
-	ret = zmq_connect(zsock, "tcp://172.17.0.3:5555");
+	ret = zmq_connect(zsock, "tcp://127.0.0.1:5555");
 	if (ret < 0) {
 		printf("error: connect socket\n");
 	}

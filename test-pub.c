@@ -13,7 +13,7 @@ int main(int argc, char **argv)
 
 	zctx = zmq_ctx_new();
 
-	zsock = zmq_socket (zctx, ZMQ_PUB);
+	zsock = zmq_socket(zctx, ZMQ_PUB);
 
 	ret = zmq_bind(zsock, "tcp://0.0.0.0:5555");
 	if (ret < 0) {
